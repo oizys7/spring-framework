@@ -344,6 +344,8 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * a custom {@link ConfigurableEnvironment} implementation.
 	 */
 	protected ConfigurableEnvironment createEnvironment() {
+		// new 子类时会创建父类, 调用父类的构造器, 父构造器中调用了 customizePropertySources() 方法
+		// 并且该方法被子类重写: org.springframework.core.env.StandardEnvironment.customizePropertySources
 		return new StandardEnvironment();
 	}
 
@@ -574,32 +576,48 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		return this.applicationListeners;
 	}
 
+	/*
+	* todo-w 最重要的方法
+	*/
+	// todo-w 什么时候会调用该方法? Bean 的定义信息是在哪里读取、处理的?
 	@Override
 	public void refresh() throws BeansException, IllegalStateException {
 		synchronized (this.startupShutdownMonitor) {
 			StartupStep contextRefresh = this.applicationStartup.start("spring.context.refresh");
 
 			// Prepare this context for refreshing.
+			// 1. 设置当前 spring 启动的时间
+			// 2. 设置活跃状态 true
+			// 3. 设置关闭状态 false
+			// 4. 获取当前的 Environment 对象, 并加载当前系统的属性值到该对象中
+			// 5. 设置监听器和时间发生的流程, 默认为空的集合
 			prepareRefresh();
 
 			// Tell the subclass to refresh the internal bean factory.
+			// 1. 创建容器对象 DefaultListableBeanFactory
+			// 2. 加载 xml 配置文件的属性值到当前的工厂中, 最重要的就是 BeanDefinition
 			ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
 
 			// Prepare the bean factory for use in this context.
+			// 使用 beanFactory 前的准备工作, 填充一些属性
 			prepareBeanFactory(beanFactory);
 
 			try {
 				// Allows post-processing of the bean factory in context subclasses.
+				// 空的, 可以使用子类覆盖方法进行自定义处理
 				postProcessBeanFactory(beanFactory);
 
 				StartupStep beanPostProcess = this.applicationStartup.start("spring.context.beans.post-process");
 				// Invoke factory processors registered as beans in the context.
+				// 调用各种 BeanFactoryPostProcessor(spring 自带的和自定义的都会调用) 增强器
 				invokeBeanFactoryPostProcessors(beanFactory);
 				// Register bean processors that intercept bean creation.
+				// 注册 Bean 处理器, 这里只是注册功能, 真正的调用是在 doGetBean() 方法
 				registerBeanPostProcessors(beanFactory);
 				beanPostProcess.end();
 
 				// Initialize message source for this context.
+				// 为上下文初始化 Message 源, 即不同语言的消息体(i8n),
 				initMessageSource();
 
 				// Initialize event multicaster for this context.
@@ -649,7 +667,10 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 */
 	protected void prepareRefresh() {
 		// Switch to active.
+		// 1. 设置当前 spring 启动的时间
 		this.startupDate = System.currentTimeMillis();
+		// 2. 设置活跃状态 true
+		// 3. 设置关闭状态 false
 		this.closed.set(false);
 		this.active.set(true);
 
@@ -667,9 +688,13 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 		// Validate that all properties marked as required are resolvable:
 		// see ConfigurablePropertyResolver#setRequiredProperties
+		// 4. 获取当前的 Environment 对象, 并加载当前系统的属性值到该对象中
+		// 获取环境变量, 然后验证需要的属性
 		getEnvironment().validateRequiredProperties();
 
 		// Store pre-refresh ApplicationListeners...
+		// 5. 设置监听器和时间发生的流程, 默认为空的集合
+		// 缓存预刷新的 Application 监听器
 		if (this.earlyApplicationListeners == null) {
 			this.earlyApplicationListeners = new LinkedHashSet<>(this.applicationListeners);
 		}
@@ -700,7 +725,9 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * @see #getBeanFactory()
 	 */
 	protected ConfigurableListableBeanFactory obtainFreshBeanFactory() {
+		// 刷新
 		refreshBeanFactory();
+		// 获取一个新的 ListableBeanFactory 对象
 		return getBeanFactory();
 	}
 

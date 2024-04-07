@@ -38,6 +38,9 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author Brian Clozel
  * @author Sam Brannen
  */
+/*
+*
+*/
 class InstrumentedMethodTests {
 
 	private RuntimeHints hints = new RuntimeHints();
