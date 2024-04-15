@@ -46,6 +46,12 @@ import org.springframework.util.Assert;
  * @since 3.0
  * @see AnnotationConfigApplicationContext#register
  */
+
+/*
+ * AnnotatedBeanDefinitionReader 主要用于扫描类路径下带有特定注解的类，
+ * 例如 @Component、@Service、@Repository、@Controller 等，并根据这些注解信息创建对应的 BeanDefinition。
+ * 它是 Spring 框架中用于实现基于注解的 bean 配置方式的重要组件之一。
+ */
 public class AnnotatedBeanDefinitionReader {
 
 	private final BeanDefinitionRegistry registry;

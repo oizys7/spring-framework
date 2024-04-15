@@ -1,0 +1,37 @@
+plugins {
+    id 'java-library'
+}
+
+group = 'org.oizys.springframework'
+version = '6.0.19-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    api(project(":spring-context"))
+    api(project(":spring-aspects"))  //引入aop&切面模块
+    api(project(":spring-jdbc"))  //引入jdbc模块
+
+    // https://mvnrepository.com/artifact/c3p0/c3p0
+    implementation group: 'c3p0', name: 'c3p0', version: '0.9.1.2'
+// https://mvnrepository.com/artifact/mysql/mysql-connector-java
+    implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.18'
+    implementation project(path: ':spring-core')
+
+
+    // https://mvnrepository.com/artifact/org.projectlombok/lombok
+    compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.14'
+
+
+}
+
+task createDirs {
+    sourceSets*.java.srcDirs*.each {
+        it.mkdirs()
+    }
+    sourceSets*.resources.srcDirs*.each{
+        it.mkdirs()
+    }
+}

@@ -71,6 +71,13 @@ import org.springframework.util.StringUtils;
  * @since 3.0
  * @see ConfigurationClassParser
  */
+/*
+ * 当 Spring 容器启动时，会扫描应用上下文中的所有配置类，即带有 @Configuration 注解的类
+ * 1. 对于每个配置类，Spring 容器会使用 ConfigurationClassBeanDefinitionReader 来读取其中的 @Bean 注解，
+ *    并将其转换为相应的 BeanDefinition 对象
+ * 2. ConfigurationClassBeanDefinitionReader 会解析配置类中的 @Bean 注解，并根据方法名和返回类型等信息创建对应的 BeanDefinition
+ * 3. 解析完成后，Spring 容器会将这些 BeanDefinition 注册到容器中，从而使得这些 @Bean 注解标注的 bean 可以被容器管理
+ */
 class ConfigurationClassBeanDefinitionReader {
 
 	private static final Log logger = LogFactory.getLog(ConfigurationClassBeanDefinitionReader.class);

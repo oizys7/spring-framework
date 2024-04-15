@@ -59,3 +59,6 @@ settings.gradle.projectsLoaded {
 		}
 	}
 }
+include 'springsource-study'
+include 'springsource-study'
+

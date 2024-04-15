@@ -78,7 +78,7 @@ class DefaultApplicationStartup implements ApplicationStartup {
 		public void end() {
 		}
 
-
+		// 默认 tag 是空的
 		static class DefaultTags implements StartupStep.Tags {
 
 			@Override

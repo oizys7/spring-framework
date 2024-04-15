@@ -595,7 +595,19 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 			// Tell the subclass to refresh the internal bean factory.
 			// 1. 创建容器对象 DefaultListableBeanFactory
-			// 2. 加载 xml 配置文件的属性值到当前的工厂中, 最重要的就是 BeanDefinition
+			/* 2. 工厂创建：BeanFactory 第一次开始创建的时候，有xml解析逻辑
+			 *      2.1、创建BeanFactory对象
+			 *  	2.2、xml解析
+			 * 			传统标签解析：bean、import等
+			 * 			自定义标签解析 如：<context:component-scan base-package="org.example"/>
+			 * 			自定义标签解析流程：
+			 * 				a、根据当前解析标签的头信息找到对应的namespaceUri
+			 * 				b、加载spring所以jar中的spring.handlers文件。并建立映射关系
+			 * 				c、根据namespaceUri从映射关系中找到对应的实现了NamespaceHandler接口的类
+			 * 				d、调用类的init方法，init方法是注册了各种自定义标签的解析类
+			 * 				e、根据namespaceUri找到对应的解析类，然后调用passer方法完成标签解析
+			 * 		2.3、把解析出来的xml标签封装成BeanDefinition对象
+			 */
 			ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
 
 			// Prepare the bean factory for use in this context.
@@ -612,7 +624,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 				// 调用各种 BeanFactoryPostProcessor(spring 自带的和自定义的都会调用) 增强器
 				invokeBeanFactoryPostProcessors(beanFactory);
 				// Register bean processors that intercept bean creation.
-				// 注册 Bean 处理器, 这里只是注册功能, 真正的调用是在 doGetBean() 方法
+				// 提前准备好并且注册 Bean 处理器, 这里只是注册功能, 真正的调用是在 doGetBean() 方法
 				registerBeanPostProcessors(beanFactory);
 				beanPostProcess.end();
 
@@ -624,12 +636,14 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 				initApplicationEventMulticaster();
 
 				// Initialize other special beans in specific context subclasses.
+				// 留给子类做特殊实现
 				onRefresh();
 
 				// Check for listener beans and register them.
 				registerListeners();
 
 				// Instantiate all remaining (non-lazy-init) singletons.
+				// !!
 				finishBeanFactoryInitialization(beanFactory);
 
 				// Last step: publish corresponding event.
@@ -950,6 +964,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 */
 	protected void finishBeanFactoryInitialization(ConfigurableListableBeanFactory beanFactory) {
 		// Initialize conversion service for this context.
+		// 设置一些类型转化操作
 		if (beanFactory.containsBean(CONVERSION_SERVICE_BEAN_NAME) &&
 				beanFactory.isTypeMatch(CONVERSION_SERVICE_BEAN_NAME, ConversionService.class)) {
 			beanFactory.setConversionService(
@@ -973,6 +988,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		beanFactory.setTempClassLoader(null);
 
 		// Allow for caching all bean definition metadata, not expecting further changes.
+		// 可以将不在修改的 Bean 放入到这个缓存中
 		beanFactory.freezeConfiguration();
 
 		// Instantiate all remaining (non-lazy-init) singletons.

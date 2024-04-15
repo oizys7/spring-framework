@@ -122,6 +122,7 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
 		// 如果已经存在 BeanFactor 则将其中的所有 Bean 销毁并将其关闭
 		if (hasBeanFactory()) {
 			destroyBeans();
+			// 将 beanFactory 置为 null
 			closeBeanFactory();
 		}
 		try {
@@ -131,7 +132,7 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
 			customizeBeanFactory(beanFactory);
 			// 加载 Bean 的定义, 这里有相当多的重载和反复调用
 			// ! 每一次重载的参数是不一样的
-			// 理解:
+			// todo-w 理解:
 			loadBeanDefinitions(beanFactory);
 			this.beanFactory = beanFactory;
 		}
