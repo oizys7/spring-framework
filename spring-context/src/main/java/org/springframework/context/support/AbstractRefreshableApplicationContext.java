@@ -128,11 +128,16 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
 		try {
 			// 获取一个新的 ListableBeanFactory 对象
 			DefaultListableBeanFactory beanFactory = createBeanFactory();
+			// 为了序列化指定 id, 可以从 id 反序列化到 beanFactory 对象
 			beanFactory.setSerializationId(getId());
+			// 定制 beanFactory, 设置相关属性
+			// 包括是否允许覆盖相同名称的不同定义的对象以及循环依赖
 			customizeBeanFactory(beanFactory);
-			// 加载 Bean 的定义, 这里有相当多的重载和反复调用
+			// 加载 Bean 的定义, 初始化 documentReader, 并进行 xml 文件的读取和解析
+			// 这里有相当多的重载和反复调用
 			// ! 每一次重载的参数是不一样的
 			// todo-w 理解:
+			// (这里使用了适配器模式)
 			loadBeanDefinitions(beanFactory);
 			this.beanFactory = beanFactory;
 		}
@@ -217,10 +222,13 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
 	 * @see DefaultListableBeanFactory#setAllowRawInjectionDespiteWrapping
 	 * @see DefaultListableBeanFactory#setAllowEagerClassLoading
 	 */
+	// 可以重写来定制化 -> MyClassPathXmlApplicationContext
 	protected void customizeBeanFactory(DefaultListableBeanFactory beanFactory) {
+		// 该属性表示是否允许覆盖相同名称的不同定义的对象以及循环依赖
 		if (this.allowBeanDefinitionOverriding != null) {
 			beanFactory.setAllowBeanDefinitionOverriding(this.allowBeanDefinitionOverriding);
 		}
+		// 该属性表示是否允许循环依赖
 		if (this.allowCircularReferences != null) {
 			beanFactory.setAllowCircularReferences(this.allowCircularReferences);
 		}

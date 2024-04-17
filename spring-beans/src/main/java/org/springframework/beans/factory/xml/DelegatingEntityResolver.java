@@ -61,6 +61,9 @@ public class DelegatingEntityResolver implements EntityResolver {
 	public DelegatingEntityResolver(@Nullable ClassLoader classLoader) {
 		this.dtdResolver = new BeansDtdResolver();
 		this.schemaResolver = new PluggableSchemaResolver(classLoader);
+		// schemaMappings 是如何加载的?
+		// debug 时 idea 为了显示会帮我们调用 toString() 方法
+		// PluggableSchemaResolver 的 toString() 方法被重写, 调用了 getSchemaMappings() 方法
 	}
 
 	/**

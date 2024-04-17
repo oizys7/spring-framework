@@ -245,6 +245,13 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 
 	private final ResourceLoader resourceLoader;
 
+	/*
+	 * ant 是一种路径表达式
+	 * ?	匹配任何单字符
+	 * *    匹配0或者任意数量的字符
+	 * **	匹配0或者更多的目录
+	 */
+	// 创建 ant 风格的路径匹配器
 	private PathMatcher pathMatcher = new AntPathMatcher();
 
 

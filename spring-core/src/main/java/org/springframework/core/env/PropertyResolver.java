@@ -109,6 +109,7 @@ public interface PropertyResolver {
 	 * @throws IllegalArgumentException if given text is {@code null}
 	 * or if any placeholders are unresolvable
 	 */
+	// 处理路径中的占位符
 	String resolveRequiredPlaceholders(String text) throws IllegalArgumentException;
 
 }

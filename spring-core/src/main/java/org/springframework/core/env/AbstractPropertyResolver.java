@@ -231,6 +231,11 @@ public abstract class AbstractPropertyResolver implements ConfigurablePropertyRe
 	}
 
 	private PropertyPlaceholderHelper createPlaceholderHelper(boolean ignoreUnresolvablePlaceholders) {
+		/*
+		 * this.placeholderPrefix-> ${
+		 * this.placeholderSuffix-> }
+		 * this.valueSeparator-> :
+		 */
 		return new PropertyPlaceholderHelper(this.placeholderPrefix, this.placeholderSuffix,
 				this.valueSeparator, ignoreUnresolvablePlaceholders);
 	}

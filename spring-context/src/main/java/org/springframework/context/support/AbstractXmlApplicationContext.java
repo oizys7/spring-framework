@@ -46,6 +46,7 @@ import org.springframework.lang.Nullable;
  */
 public abstract class AbstractXmlApplicationContext extends AbstractRefreshableConfigApplicationContext {
 
+	// 设置 xml 文件的验证标志, 默认是 true 会对 xml 文件进行相应规则(dtd, xsd...)的验证
 	private boolean validating = true;
 
 
@@ -81,17 +82,22 @@ public abstract class AbstractXmlApplicationContext extends AbstractRefreshableC
 	@Override
 	protected void loadBeanDefinitions(DefaultListableBeanFactory beanFactory) throws BeansException, IOException {
 		// Create a new XmlBeanDefinitionReader for the given BeanFactory.
+		// 创建一个 xml 的 beanDefinitionReader, 并通过回调设置到 beanFactory 中
 		XmlBeanDefinitionReader beanDefinitionReader = new XmlBeanDefinitionReader(beanFactory);
 
 		// Configure the bean definition reader with this context's
 		// resource loading environment.
+		// 给 reader 设置环境变量
 		beanDefinitionReader.setEnvironment(getEnvironment());
 		beanDefinitionReader.setResourceLoader(this);
+		// 设置 EntityResolver, 来读取本地的 xsd、dtd 文件来完成解析工作
 		beanDefinitionReader.setEntityResolver(new ResourceEntityResolver(this));
 
 		// Allow a subclass to provide custom initialization of the reader,
 		// then proceed with actually loading the bean definitions.
+		// 设置配置文件是否需要进行验证
 		initBeanDefinitionReader(beanDefinitionReader);
+		// 开始 beanDefinition 的加载
 		loadBeanDefinitions(beanDefinitionReader);
 	}
 

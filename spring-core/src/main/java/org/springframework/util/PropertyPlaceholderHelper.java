@@ -136,6 +136,7 @@ public class PropertyPlaceholderHelper {
 
 		StringBuilder result = new StringBuilder(value);
 		while (startIndex != -1) {
+			// todo-w findPlaceholderEndIndex ?
 			int endIndex = findPlaceholderEndIndex(result, startIndex);
 			if (endIndex != -1) {
 				String placeholder = result.substring(startIndex + this.placeholderPrefix.length(), endIndex);
@@ -148,6 +149,7 @@ public class PropertyPlaceholderHelper {
 							"Circular placeholder reference '" + originalPlaceholder + "' in property definitions");
 				}
 				// Recursive invocation, parsing placeholders contained in the placeholder key.
+				// 递归处理类似于 spring-${abc${def}}.xml
 				placeholder = parseStringValue(placeholder, placeholderResolver, visitedPlaceholders);
 				// Now obtain the value for the fully resolved key...
 				String propVal = placeholderResolver.resolvePlaceholder(placeholder);

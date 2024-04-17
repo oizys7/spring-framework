@@ -170,6 +170,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	static {
 		// Eagerly load the ContextClosedEvent class to avoid weird classloader issues
 		// on application shutdown in WebLogic 8.1. (Reported by Dustin Woods.)
+		// 优先加载上下文关闭事件, 来防止在加载类时遇到奇怪问题导致 Spring 程序关闭
 		ContextClosedEvent.class.getName();
 	}
 
@@ -177,7 +178,9 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	/** Logger used by this class. Available to subclasses. */
 	protected final Log logger = LogFactory.getLog(getClass());
 
-	/** Unique id for this context, if any. */
+	/**
+	 * Spring 上下文的唯一标识
+	 * Unique id for this context, if any. */
 	private String id = ObjectUtils.identityToString(this);
 
 	/** Display name. */
@@ -198,12 +201,15 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	private long startupDate;
 
 	/** Flag that indicates whether this context is currently active. */
+	// 激活状态
 	private final AtomicBoolean active = new AtomicBoolean();
 
 	/** Flag that indicates whether this context has been closed already. */
+	// 关闭状态
 	private final AtomicBoolean closed = new AtomicBoolean();
 
 	/** Synchronization monitor for "refresh" and "close". */
+	// 这是一个锁: 用在刷新和销毁时
 	private final Object startupShutdownMonitor = new Object();
 
 	/** Reference to the JVM shutdown hook, if registered. */
@@ -244,6 +250,10 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * Create a new AbstractApplicationContext with no parent.
 	 */
 	public AbstractApplicationContext() {
+		/*
+		 * 资源模式处理器: 用来解析当前系统运行时需要的一些资源(我们写的配置文件)
+		 */
+		// 创建资源模式处理器
 		this.resourcePatternResolver = getResourcePatternResolver();
 	}
 
@@ -253,6 +263,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 */
 	public AbstractApplicationContext(@Nullable ApplicationContext parent) {
 		this();
+		// 设置父类, Spring 程序中为 null, 主要在 Spring MVC 里面使用
 		setParent(parent);
 	}
 
@@ -698,6 +709,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		}
 
 		// Initialize any placeholder property sources in the context environment.
+		// 留给子类实现,
 		initPropertySources();
 
 		// Validate that all properties marked as required are resolvable:
@@ -707,9 +719,10 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		getEnvironment().validateRequiredProperties();
 
 		// Store pre-refresh ApplicationListeners...
-		// 5. 设置监听器和时间发生的流程, 默认为空的集合
+		// 5. 设置前置监听器和事件发生的流程, 默认为空的集合
 		// 缓存预刷新的 Application 监听器
 		if (this.earlyApplicationListeners == null) {
+			// 在 Spring 中 this.applicationListeners 是恒等于空的, 这里这样写只是为了扩展
 			this.earlyApplicationListeners = new LinkedHashSet<>(this.applicationListeners);
 		}
 		else {
@@ -720,6 +733,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 		// Allow for the collection of early ApplicationEvents,
 		// to be published once the multicaster is available...
+		// 创建刷新前的监听事件集合
 		this.earlyApplicationEvents = new LinkedHashSet<>();
 	}
 
@@ -730,6 +744,8 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 */
 	protected void initPropertySources() {
 		// For subclasses: do nothing by default.
+		// 可以扩展什么东西?
+		// 可以用来检查必要的属性是否被设置 -> MyClassPathXmlApplicationContext
 	}
 
 	/**
@@ -739,7 +755,8 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * @see #getBeanFactory()
 	 */
 	protected ConfigurableListableBeanFactory obtainFreshBeanFactory() {
-		// 刷新
+		// 初始化 BeanFactory, 并进行 xml 文件的读取
+		// 最后将得到的 BeanFactory 实例存放在当前对象的属性中
 		refreshBeanFactory();
 		// 获取一个新的 ListableBeanFactory 对象
 		return getBeanFactory();
@@ -1429,6 +1446,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * @see org.springframework.context.ConfigurableApplicationContext#getBeanFactory
 	 */
 	@Nullable
+	// Spring 里面恒等于 null
 	protected BeanFactory getInternalParentBeanFactory() {
 		return (getParent() instanceof ConfigurableApplicationContext cac ?
 				cac.getBeanFactory() : getParent());
