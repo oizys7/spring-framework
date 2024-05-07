@@ -588,9 +588,12 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	}
 
 	/*
-	* todo-w 最重要的方法
+	* 最重要的方法
 	*/
-	// todo-w 什么时候会调用该方法? Bean 的定义信息是在哪里读取、处理的?
+	// 1. todo-w 什么时候会调用该方法?
+	//  1.1 初始的时候会调用，创建并初始化 spring 内部使用的类（工厂、资源处理、上下文等）
+	// 2. Bean 的定义信息是在哪里读取、处理的?
+	// 	在对 loadBeanDefinitions 方法的多次调用时加载并处理
 	@Override
 	public void refresh() throws BeansException, IllegalStateException {
 		synchronized (this.startupShutdownMonitor) {
@@ -757,6 +760,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	protected ConfigurableListableBeanFactory obtainFreshBeanFactory() {
 		// 初始化 BeanFactory, 并进行 xml 文件的读取
 		// 最后将得到的 BeanFactory 实例存放在当前对象的属性中
+		// todo-w 在哪里处理的 BeanFactoryPost ？如何自定义它们？
 		refreshBeanFactory();
 		// 获取一个新的 ListableBeanFactory 对象
 		return getBeanFactory();

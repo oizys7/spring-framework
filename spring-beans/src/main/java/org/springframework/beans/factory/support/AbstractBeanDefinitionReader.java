@@ -206,7 +206,7 @@ public abstract class AbstractBeanDefinitionReader implements BeanDefinitionRead
 	 * @see #loadBeanDefinitions(org.springframework.core.io.Resource)
 	 * @see #loadBeanDefinitions(org.springframework.core.io.Resource[])
 	 */
-	// todo-w 干什么?
+	// String -> Resource[]
 	public int loadBeanDefinitions(String location, @Nullable Set<Resource> actualResources) throws BeanDefinitionStoreException {
 		// 这里获取了 ResourceLoader 对象
 		ResourceLoader resourceLoader = getResourceLoader();
@@ -249,6 +249,7 @@ public abstract class AbstractBeanDefinitionReader implements BeanDefinitionRead
 	}
 
 	@Override
+	// String[] -> String
 	public int loadBeanDefinitions(String... locations) throws BeanDefinitionStoreException {
 		Assert.notNull(locations, "Location array must not be null");
 		int count = 0;

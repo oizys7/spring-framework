@@ -241,7 +241,9 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 			String name, @Nullable Class<T> requiredType, @Nullable Object[] args, boolean typeCheckOnly)
 			throws BeansException {
 
-		// todo-w 这里不直接拿需要转化, 原因是?
+		// 这里不直接拿需要转化, 原因是?
+		// 1. 这里的 name 可能是别名
+		// 2. name 可能是 beanFactory 的名字，需要去掉 & 前缀
 		String beanName = transformedBeanName(name);
 		Object beanInstance;
 

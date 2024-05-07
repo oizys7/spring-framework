@@ -134,10 +134,10 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
 			// 包括是否允许覆盖相同名称的不同定义的对象以及循环依赖
 			customizeBeanFactory(beanFactory);
 			// 加载 Bean 的定义, 初始化 documentReader, 并进行 xml 文件的读取和解析
-			// 这里有相当多的重载和反复调用
-			// ! 每一次重载的参数是不一样的
-			// todo-w 理解:
+			// 理解:
 			// (这里使用了适配器模式)
+			// 这里有相当多的重载和反复调用
+			// 每一次重载的参数是不一样的，不同的参数的调用是对加载 BeanDefinition 的不同阶段进行处理
 			loadBeanDefinitions(beanFactory);
 			this.beanFactory = beanFactory;
 		}

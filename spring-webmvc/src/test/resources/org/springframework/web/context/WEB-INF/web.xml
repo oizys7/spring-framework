@@ -119,7 +119,7 @@
 		<role-name>registeredUsers</role-name>
 	</security-role>
 
-<!--todo-w ?-->
+<!--todo-w ejb-ref 是什么?-->
 	<ejb-ref>
 		<ejb-ref-name>ejb/FixtureManager</ejb-ref-name>
 		<ejb-ref-type>Session</ejb-ref-type>
