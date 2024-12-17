@@ -1,3 +1,9 @@
+buildscript {
+	repositories {
+		maven { url "https://repo.spring.io/plugins-release" }
+	}
+}
+
 plugins {
 	id 'io.spring.nohttp' version '0.0.11'
 	id 'io.freefair.aspectj' version '8.0.1' apply false
@@ -18,6 +24,9 @@ ext {
 
 configure(allprojects) { project ->
 	repositories {
+		//新增以下2个阿里云镜像
+		maven { url 'https://maven.aliyun.com/nexus/content/groups/public/' }
+		maven { url 'https://maven.aliyun.com/nexus/content/repositories/jcenter' }
 		mavenCentral()
 		maven {
 			url "https://repo.spring.io/milestone"
