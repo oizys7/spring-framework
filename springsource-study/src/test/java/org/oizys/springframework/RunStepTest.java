@@ -10,7 +10,8 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 public class RunStepTest {
 	@Test
 	void Test1(){
-		ApplicationContext ac1 = new ClassPathXmlApplicationContext("spring-${user.country}.xml");
+		ApplicationContext ac1 = new ClassPathXmlApplicationContext("spring-CN.xml");
+//		ApplicationContext ac1 = new ClassPathXmlApplicationContext("spring-${user.country}.xml");
 
 		// setAllowBeanDefinitionOverriding -> false
 		ApplicationContext ac2 = new MyClassPathXmlApplicationContext("beans.xml");

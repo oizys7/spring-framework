@@ -197,7 +197,11 @@ public class ClassPathXmlApplicationContext extends AbstractXmlApplicationContex
 		super(parent);
 		Assert.notNull(paths, "Path array must not be null");
 		Assert.notNull(clazz, "Class argument must not be null");
-		// todo-w 待分析 configResources、configLocations 的区别，执行上有什么区别
+		// configResources、configLocations 的区别，执行上有什么区别?
+		// 1、configResources 会直接调用 loadBeanDefinitions(Resource... resources) 加载
+		// 2、configLocations 会通过 loadBeanDefinitions(String location)方法，
+		// 	  调用 DefaultResourceLoader 的 getResource() 方法完成具体的 Resource 定位,
+		// 	  再调用 loadBeanDefinitions(Resource... resources) 加载
 		this.configResources = new Resource[paths.length];
 		for (int i = 0; i < paths.length; i++) {
 			this.configResources[i] = new ClassPathResource(paths[i], clazz);

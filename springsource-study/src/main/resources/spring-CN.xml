@@ -8,6 +8,9 @@
 	<bean  class="org.oizys.springframework.beans.Person" id="person">
 		<property name= "name" value="zhangsan"></property>
 	</bean>
+	<bean  class="org.oizys.springframework.beans.Person" id="person">
+		<property name= "name" value="zhangsan"></property>
+	</bean>
 
 
 </beans>
