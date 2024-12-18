@@ -197,6 +197,7 @@ public class ClassPathXmlApplicationContext extends AbstractXmlApplicationContex
 		super(parent);
 		Assert.notNull(paths, "Path array must not be null");
 		Assert.notNull(clazz, "Class argument must not be null");
+		// todo-w 待分析 configResources、configLocations 的区别，执行上有什么区别
 		this.configResources = new Resource[paths.length];
 		for (int i = 0; i < paths.length; i++) {
 			this.configResources[i] = new ClassPathResource(paths[i], clazz);

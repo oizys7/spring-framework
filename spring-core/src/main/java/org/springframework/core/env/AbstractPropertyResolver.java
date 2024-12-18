@@ -143,6 +143,8 @@ public abstract class AbstractPropertyResolver implements ConfigurablePropertyRe
 	@Override
 	public void validateRequiredProperties() {
 		MissingRequiredPropertiesException ex = new MissingRequiredPropertiesException();
+		// requiredProperties 在 Spring 启动刷新时暂未用到，
+		// 我们可以使用 setRequiredProperties() 方法指定需要启动时必须存在的属性
 		for (String key : this.requiredProperties) {
 			if (this.getProperty(key) == null) {
 				ex.addMissingRequiredProperty(key);
