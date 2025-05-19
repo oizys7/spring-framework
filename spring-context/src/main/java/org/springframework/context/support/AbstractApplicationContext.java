@@ -612,15 +612,15 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 			/* 2. 工厂创建：BeanFactory 第一次开始创建的时候，有xml解析逻辑
 			 *      2.1、创建BeanFactory对象
 			 *  	2.2、xml解析
-			 * 			传统标签解析：bean、import等
-			 * 			自定义标签解析 如：<context:component-scan base-package="org.example"/>
+			 * 			传统标签解析：beans、bean、import、alise 使用 parseDefaultElement()解析
+			 * 			自定义标签解析 如：<context:component-scan base-package="org.example"/> 使用 parseCustomElement()解析
 			 * 			自定义标签解析流程：
-			 * 				a、根据当前解析标签的头信息找到对应的namespaceUri
-			 * 				b、加载spring所以jar中的spring.handlers文件。并建立映射关系
-			 * 				c、根据namespaceUri从映射关系中找到对应的实现了NamespaceHandler接口的类
-			 * 				d、调用类的init方法，init方法是注册了各种自定义标签的解析类
-			 * 				e、根据namespaceUri找到对应的解析类，然后调用passer方法完成标签解析
-			 * 		2.3、把解析出来的xml标签封装成BeanDefinition对象
+			 * 				a、根据当前解析标签的头信息找到对应的 namespaceUri
+			 * 				b、加载 spring 所有 jar 中的 spring.handlers 文件。并建立映射关系
+			 * 				c、根据 namespaceUri 从映射关系中找到对应的实现了 NamespaceHandler 接口的类
+			 * 				d、调用类的 init 方法，init 方法是注册了各种自定义标签的解析类
+			 * 				e、根据 namespaceUri 找到对应的解析类，然后调用 passer 方法完成标签解析
+			 * 		2.3、把解析出来的 xml 标签封装成 BeanDefinition 对象
 			 */
 			ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
 
